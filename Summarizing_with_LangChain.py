@@ -47,6 +47,7 @@ system_output = llm(messages)
 print(system_output.content)
 
 # Adding a dynamic part to the prompt and will summarize using Prompt Templates
+<<<<<<< HEAD
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
 
@@ -65,3 +66,5 @@ print(llm.get_num_tokens(prompt.format(text=text, language='English')))
 chain = LLMChain(llm=llm, prompt=prompt)
 summary = chain.invoke({'text': text, 'language': 'hindi'})
 print(summary)
+=======
+>>>>>>> 70387100eedcbcf30a34d8c74d20c87d0c39f989
