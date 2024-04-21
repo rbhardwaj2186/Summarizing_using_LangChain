@@ -47,3 +47,24 @@ system_output = llm(messages)
 print(system_output.content)
 
 # Adding a dynamic part to the prompt and will summarize using Prompt Templates
+<<<<<<< HEAD
+from langchain import PromptTemplate
+from langchain.chains import LLMChain
+
+template = '''
+Write a concise and short summary of the following text:
+TEXT: `{text}`
+Translate the summary to {language}
+'''
+prompt = PromptTemplate(
+    input_variables = ['text', 'language'],
+    template=template
+)
+
+print(llm.get_num_tokens(prompt.format(text=text, language='English')))
+
+chain = LLMChain(llm=llm, prompt=prompt)
+summary = chain.invoke({'text': text, 'language': 'hindi'})
+print(summary)
+=======
+>>>>>>> 70387100eedcbcf30a34d8c74d20c87d0c39f989
