@@ -47,7 +47,6 @@ system_output = llm(messages)
 print(system_output.content)
 
 # Adding a dynamic part to the prompt and will summarize using Prompt Templates
-<<<<<<< HEAD
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
 
@@ -66,5 +65,49 @@ print(llm.get_num_tokens(prompt.format(text=text, language='English')))
 chain = LLMChain(llm=llm, prompt=prompt)
 summary = chain.invoke({'text': text, 'language': 'hindi'})
 print(summary)
-=======
->>>>>>> 70387100eedcbcf30a34d8c74d20c87d0c39f989
+
+# Summarizing using StuffDocumentChain
+from langchain import PromptTemplate
+from langchain.chat_models import ChatOpenAI
+from langchain.chains.summarize import load_summarize_chain
+from langchain.docstore.document import Document
+
+with open('./sj.txt', encoding='utf-8') as f:
+    text = f.read()
+# text
+
+docs = [Document(page_content=text)]
+llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+
+template = '''Write a concise and short summary of the following text 
+TEXT:`{text}`
+'''
+
+prompt = PromptTemplate(
+    input_variables=['text'],
+    template=template
+)
+
+chain = load_summarize_chain(
+    llm,
+    chain_type='stuff',
+    prompt=prompt,
+    verbose=False
+)
+output_summary = chain.invoke(docs)
+
+print(output_summary)
+
+## Summarizng Large Documents Using map_reduce
+from langchain import PromptTemplate
+from langchain.chat_models import ChatOpenAI
+from langchain.chains.summarize import load_summary_chain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+with open('./sj.txt', encoding='utf-8') as f:
+    text = f.read()
+
+# text
+
+docs = [Document(page_content=text)]
+llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
