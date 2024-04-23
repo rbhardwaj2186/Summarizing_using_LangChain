@@ -126,3 +126,6 @@ chain = load_summarize_chain(
 )
 output_summary = chain.invoke(chunks)
 print(output_summary)
+
+print(chain.llm_chain.prompt.template)
+print(chain.combine_document_chain.llm_chain.prompt.template)
