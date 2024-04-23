@@ -101,7 +101,7 @@ print(output_summary)
 ## Summarizng Large Documents Using map_reduce
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.chains.summarize import load_summary_chain
+from langchain.chains.summarize import load_summarize_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 with open('./sj.txt', encoding='utf-8') as f:
@@ -111,3 +111,18 @@ with open('./sj.txt', encoding='utf-8') as f:
 
 docs = [Document(page_content=text)]
 llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+
+llm.get_num_tokens(text)
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+chunks = text_splitter.create_documents([text])
+
+print(f'length of chunks is: {len(chunks)}')
+
+chain = load_summarize_chain(
+    llm,
+    chain_type='map_reduce',
+    verbose=False
+)
+output_summary = chain.invoke(chunks)
+print(output_summary)
