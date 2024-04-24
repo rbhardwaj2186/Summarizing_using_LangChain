@@ -159,3 +159,16 @@ summary_chain = load_summarize_chain(
 )
 output = summary_chain.invoke(chunks)
 print(output)
+
+# Summarization using refine Chain
+from langchain.chat_models import ChatOpenAI
+from langchain import PromptTemplate
+from langchain.chains.summarize import load_summarize_chain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import UnstructuredPDFLoader
+
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv(), override=True)
+
+loader = UnstructuredPDFLoader('./attent')
