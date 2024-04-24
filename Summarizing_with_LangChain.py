@@ -129,3 +129,22 @@ print(output_summary)
 
 print(chain.llm_chain.prompt.template)
 print(chain.combine_document_chain.llm_chain.prompt.template)
+
+# map_reduce with Custom Prompts
+map_prompt = '''
+Write a short concise summary of the following:
+Text: `{text}`
+CONCISE SUMMARY:
+'''
+map_prompt_template = PromptTemplate(
+    input_variables = ['text'],
+    template=map_prompt
+)
+
+combine_prompt = '''
+Write a concise summary of the following text that covers the key points.
+Add a title to the summary.
+Start your summary with an INTRODUCTION PARAGRAPH that gives an overview of the topic FOLLOWED
+by BULLET POINTS if possible AND end the summary with a CONCLUSION PHRASE
+Text: `{text}`
+'''
