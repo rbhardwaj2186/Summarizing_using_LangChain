@@ -148,3 +148,14 @@ Start your summary with an INTRODUCTION PARAGRAPH that gives an overview of the 
 by BULLET POINTS if possible AND end the summary with a CONCLUSION PHRASE
 Text: `{text}`
 '''
+combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=['text'])
+summary_chain = load_summarize_chain(
+    llm=llm,
+    chain_type='map_reduce',
+    map_prompt=map_prompt_template,
+    combine_prompt=combine_prompt_template,
+    verbose=False
+
+)
+output = summary_chain.invoke(chunks)
+print(output)
