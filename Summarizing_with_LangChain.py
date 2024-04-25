@@ -171,4 +171,6 @@ import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv(), override=True)
 
-loader = UnstructuredPDFLoader('./attent')
+loader = UnstructuredPDFLoader('./attention_is_all_you_need.pdf')
+data = loader.load()
+print(data[0].page_content)
