@@ -195,10 +195,39 @@ chain = load_summarize_chain(
     chain_type='refine',
     verbose=False
 )
-output_summary = chain.run(chunks)
+output_summary = chain.invoke(chunks)
 
 print(output_summary)
 
+## Refine with Custom Prompts
+prompt_template = """Write a concise summary of the following extracting the key Information:
+Text: `{text}`
+CONCISE SUMMARY:"""
+initial_prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
+
+refine_template = '''
+Your job is to produce a final summary.
+I have provided an existing summary up to a certain point: {existing_answer}.
+Please refine the existing summary with some more context below.
+--------
+{text}
+--------
+Start the final summary with an INTRODUCTION PARAGRAPH that gives an overview of the topic FOLLOWED
+by BULLET POINTS if possible AND end the summary with a CONCLUSION PHRASE.
+
+'''
+refine_template = PromptTemplate(template=refine_template, input_variables=['existing_answer', 'text'])
+
+chain = load_summarize_chain(
+    llm=llm,
+    chain_type='refine',
+    question_prompt=initial_prompt,
+    refine_template=refine_template,
+    return_intermediate_step=False
+)
+output_summary = chain.invoke(chunks)
+
+print(output_summary)
 
 
 
