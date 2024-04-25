@@ -229,6 +229,30 @@ output_summary = chain.invoke(chunks)
 
 print(output_summary)
 
+## Summarizing using LangChain Agents
+from langchain_openai import ChatOpenAI
+from langchain.agents import initialize_agent, Tool
+from langchain.utilities import WikipediaAPIWrapper
+
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv(), override=True)
+
+llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+wikipedia=WikipediaAPIWrapper()
+
+tools = [
+    Tool(
+        name='Wikipedia',
+        func=wikipedia.run,
+        description='Useful for when you need to get information from wikipedia about the topic'
+    )
+]
+
+agent_executor = initialize_agent(tools, llm, agent='zero-shot-react-description',verbose=True)
+output = agent_executor.invoke('Can you please provide a short summary of George Washington')
+
+print(output)
 
 
 
