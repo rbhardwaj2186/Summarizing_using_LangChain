@@ -1,4 +1,6 @@
 import os
+
+import tiktoken
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv(), override=True)
 
@@ -173,4 +175,31 @@ load_dotenv(find_dotenv(), override=True)
 
 loader = UnstructuredPDFLoader('./attention_is_all_you_need.pdf')
 data = loader.load()
-print(data[0].page_content)
+#print(data[0].page_content)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=100)
+chunks = text_splitter.split_documents(data)
+
+llm = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
+
+def print_embedding_cost(texts):
+    import tiktoken
+    enc = tiktoken.encoding_for_model('gpt-3.5-turbo')
+    total_tokens = sum([len(enc.encode(page.page_content)) for page in texts])
+    print(f'Total Tokens: {total_tokens}')
+    print(f'Embedding Cost in USD: {total_tokens / 1000 * 0.002:.6f}')
+
+print_embedding_cost(chunks)
+
+chain = load_summarize_chain(
+    llm=llm,
+    chain_type='refine',
+    verbose=False
+)
+output_summary = chain.run(chunks)
+
+print(output_summary)
+
+
+
+
+
